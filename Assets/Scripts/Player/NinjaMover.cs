@@ -18,6 +18,8 @@ public class NinjaMover : MonoBehaviour
 
     public Animator animator;
     public string animationRunKey;
+    public string animationCrouchKey;
+    public string animationJumpKey;
 
  
     private bool faceDirRight = true;
@@ -56,13 +58,15 @@ public class NinjaMover : MonoBehaviour
         if (Input.GetButtonUp("Jump"))
         {
             if (Physics2D.OverlapCircle(groundChecker.position, groundCheckerRadius, hereIsGround))
-            {
+            { 
+                animator.SetBool(animationJumpKey, true);
                 rigidbody.velocity = new Vector2(velocity.x, jumpPower);
             }
         }
        
         bool ceilAboveHead = Physics2D.OverlapCircle(ceilChecker.position, ceilCheckerRadius, hereIsGround);
 
+        animator.SetBool(animationRunKey, !headCollider.enabled);
 
         if (Input.GetKey(KeyCode.C))
         {
