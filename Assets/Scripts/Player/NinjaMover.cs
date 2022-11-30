@@ -47,15 +47,15 @@ public class NinjaMover : MonoBehaviour
 
             if (direction < 0 && faceDirRight)
             {
-                Turning();
+                Flip();
             }   else if (direction > 0 && !faceDirRight)
             {
-                Turning();
+                Flip();
             }
         }
 
 
-        if (Input.GetButtonUp("Jump"))
+        if (Input.GetButton("Jump"))
         {
             if (Physics2D.OverlapCircle(groundChecker.position, groundCheckerRadius, hereIsGround))
             { 
@@ -63,23 +63,33 @@ public class NinjaMover : MonoBehaviour
                 rigidbody.velocity = new Vector2(velocity.x, jumpPower);
             }
         }
-       
-        bool ceilAboveHead = Physics2D.OverlapCircle(ceilChecker.position, ceilCheckerRadius, hereIsGround);
+        else
+        {
+            if (Physics2D.OverlapCircle(groundChecker.position, groundCheckerRadius, hereIsGround))
+            {
+                animator.SetBool(animationJumpKey, false);
+            }
+        }
 
-        animator.SetBool(animationRunKey, !headCollider.enabled);
+     
+        bool ceilAboveHead = Physics2D.OverlapCircle(ceilChecker.position, ceilCheckerRadius, hereIsGround);
 
         if (Input.GetKey(KeyCode.C))
         {
             headCollider.enabled = false;
+            animator.SetBool(animationCrouchKey, true);
         } 
         else if (!ceilAboveHead)
         {
             headCollider.enabled = true;
+            animator.SetBool(animationCrouchKey, false);    
         }
+
+        animator.SetBool(animationCrouchKey, !headCollider.enabled);
     }
 
 
-    private void Turning() //этот метод отвечает за то, в какую сторону повернут персонаж при движении
+    private void Flip() //этот метод отвечает за то, в какую сторону повернут персонаж при движении
     {
         faceDirRight = !faceDirRight;
         transform.Rotate(0, 180, 0);
